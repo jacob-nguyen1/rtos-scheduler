@@ -16,6 +16,10 @@ public:
         readyJobs.pop();
         return job;
     }
+
+    bool shouldPreempt(Job* running) override {
+        return false;
+    }
     
     bool isEmpty() override {
         return readyJobs.empty();

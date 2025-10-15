@@ -20,6 +20,12 @@ int main() {
         while (nextJobIdx < allJobs.size() && allJobs[nextJobIdx].arrivalTime == t) {
             scheduler.insertJob(&allJobs[nextJobIdx++]);
         }
+
+        // clear running job if it should be preempted (i.e deemed lower priority by the scheduler)
+        if (runningJob != nullptr && scheduler.shouldPreempt(runningJob)) {
+            scheduler.insertJob(runningJob);
+            runningJob = nullptr;
+        }
         
         // set running job
         if (runningJob == nullptr) runningJob = scheduler.getNextJob();
