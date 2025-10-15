@@ -1,0 +1,48 @@
+#include "Job.h"
+#include "JobGenerator.h"
+#include "Scheduler.h"
+#include "FCFSScheduler.cpp"
+#include "StackScheduler.cpp"
+#include <iostream>
+#include <vector>
+
+int main() {
+    int simTime = 1000000;
+    std::vector<Job> allJobs = generateJobs(simTime);
+    int nextJobIdx = 0;
+    std::vector<Job> completedJobs;
+
+    FCFSScheduler scheduler;
+    Job* runningJob = nullptr;
+    
+    for (int t = 0; t <= simTime; t++) {
+        // insert arrived jobs
+        while (nextJobIdx < allJobs.size() && allJobs[nextJobIdx].arrivalTime == t) {
+            scheduler.insertJob(&allJobs[nextJobIdx++]);
+        }
+        
+        // set running job
+        if (runningJob == nullptr) runningJob = scheduler.getNextJob();
+
+        if (!(t%100000)) {
+            std::cout << "t=" << t << "ms: waiting=" << (allJobs.size() - nextJobIdx)
+                    << " ready=" << scheduler.size()
+                    << " running=" << (runningJob != nullptr ? 1 : 0)
+                    << " completed=" << completedJobs.size() << std::endl;
+        }
+        
+        // execute job
+        if (runningJob != nullptr) {
+            runningJob->remainingTime--;
+            
+            // move completed jobs to completed jobs
+            if (runningJob->remainingTime == 0) {
+                runningJob->markCompleted(t);
+                completedJobs.push_back(*runningJob);
+                runningJob = nullptr;
+            }
+        }
+    }
+    
+    return 0;
+}
