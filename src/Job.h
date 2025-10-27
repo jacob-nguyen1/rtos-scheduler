@@ -4,7 +4,7 @@
 struct Job {
     int jobID;
     std::string task;
-    int priority;        // 0-31 where 0 is highest priority (32 priorities is FreeRTOS standard)
+    int priority;        // 0-7(?) where 0 is highest priority
     int executionTime;   // total time required to execute the task
     int arrivalTime;     // timestamp for when the task is ready
     int remainingTime;   // remaining time for executing the task
