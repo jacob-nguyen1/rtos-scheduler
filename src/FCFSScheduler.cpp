@@ -1,31 +1,24 @@
-#include "Scheduler.h"
-#include <queue>
+#include "FCFSScheduler.h"
 
-class FCFSScheduler : public Scheduler {
-private:
-    std::queue<Job*> readyJobs;
-    
-public:
-    void insertJob(Job* job) override {
-        readyJobs.push(job);
-    }
-    
-    Job* getNextJob() override {
-        if (readyJobs.empty()) return nullptr;
-        Job* job = readyJobs.front();
-        readyJobs.pop();
-        return job;
-    }
+void FCFSScheduler::insertJob(Job* job) {
+    readyJobs.push(job);
+}
 
-    bool shouldPreempt(Job* running) override {
-        return false;
-    }
-    
-    bool isEmpty() override {
-        return readyJobs.empty();
-    }
-    
-    int size() override {
-        return readyJobs.size();
-    }
-};
+Job* FCFSScheduler::getNextJob() {
+    if (readyJobs.empty()) return nullptr;
+    Job* job = readyJobs.front();
+    readyJobs.pop();
+    return job;
+}
+
+bool FCFSScheduler::shouldPreempt(Job* running)  {
+    return false;
+}
+
+bool FCFSScheduler::isEmpty() {
+    return readyJobs.empty();
+}
+
+int FCFSScheduler::size() {
+    return readyJobs.size();
+}

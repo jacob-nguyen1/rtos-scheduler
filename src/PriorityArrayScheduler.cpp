@@ -1,16 +1,6 @@
-#include "Scheduler.h"
-#include <queue>
+#include "PriorityArrayScheduler.h"
 
-static const int NUM_PRIORITIES = 8;
-
-class PriorityArrayScheduler : public Scheduler {
-private:
-    std::queue<Job*> readyJobs[NUM_PRIORITIES];
-    int highestPriority = -1;
-    int numJobs = 0;
-    
-public:
-    void insertJob(Job* job) override {
+void PriorityArrayScheduler::insertJob(Job* job) {
         readyJobs[job->priority].push(job);
         numJobs++;
 
@@ -19,9 +9,9 @@ public:
         } else {
             highestPriority = std::min(job->priority, highestPriority);
         }
-    }
+}
     
-    Job* getNextJob() override {
+Job* PriorityArrayScheduler::getNextJob() {
         if (numJobs == 0) return nullptr;
 
         Job* job = readyJobs[highestPriority].front();
@@ -38,20 +28,18 @@ public:
                     break;
                 }
             }
-        }
+    }
+    return job;
+}
 
-        return job;
-    }
+bool PriorityArrayScheduler::shouldPreempt(Job* running) {
+    return numJobs > 0 && highestPriority < running->priority;
+}
 
-    bool shouldPreempt(Job* running) override {
-        return numJobs > 0 && highestPriority < running->priority;
-    }
-    
-    bool isEmpty() override {
-        return numJobs == 0;
-    }
-    
-    int size() override {
-        return numJobs;
-    }
-};
+bool PriorityArrayScheduler::isEmpty() {
+    return numJobs == 0;
+}
+
+int PriorityArrayScheduler::size() {
+    return numJobs;
+}

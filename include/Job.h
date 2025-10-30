@@ -15,3 +15,5 @@ struct Job {
     Job(int id, std::string task, int priority, int executionTime, int arrivalTime, int deadlineWindow);
     void markCompleted(int currentTime);
 };
+
+std::vector<Job> generateJobs(int simTime);

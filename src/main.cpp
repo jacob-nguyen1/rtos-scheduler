@@ -1,8 +1,5 @@
 #include "Job.h"
-#include "JobGenerator.h"
-#include "Scheduler.h"
-#include "FCFSScheduler.cpp"
-#include "StackScheduler.cpp"
+#include "FCFSScheduler.h"
 #include <iostream>
 #include <vector>
 
