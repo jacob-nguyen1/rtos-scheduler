@@ -31,7 +31,7 @@ struct Settings {
     int simulationTime = 1000000;
     bool render = false;
 
-    Command command = Command { .typ = NONE };
+    Command command = Command { NONE };
 };
 
 void simulate(Scheduler &scheduler, std::vector<Job> allJobs, int simTime) {
@@ -94,7 +94,9 @@ int main(int argc, char **argv) {
 
                 // TODO: Sanitize inputs if two ints aren't supplied
 
-                settings.command = Command { .typ = CommandType::COMPARE, .args.compare = { .x = std::atoi(argv[i + 1]), .y = std::atoi(argv[i + 2])}};
+                settings.command.typ = CommandType::COMPARE;
+                settings.command.args.compare.x = std::atoi(argv[i + 1]);
+                settings.command.args.compare.y = std::atoi(argv[i + 2]);
             }
         }
 
@@ -123,9 +125,9 @@ int main(int argc, char **argv) {
         // use command arguments to decide which schedulers to use.
 
         FCFSScheduler fcfs;
-        PriorityArrayScheduler pa; // TODO: FIX THIS currently segfaults
+        PriorityArrayScheduler pa;
         simulate(fcfs, allJobs, settings.simulationTime);
-        // simulate(pa, allJobs);
+        simulate(pa, allJobs, settings.simulationTime);
         break;
     }
     default:
