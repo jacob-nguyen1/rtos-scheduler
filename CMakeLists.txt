@@ -14,3 +14,18 @@ add_executable(rtosSuite ${SOURCES})
 set_target_properties(rtosSuite PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY bin
 )
+
+#SFML -- Must download 2.6.2 for C++14 compatability
+if(APPLE)
+    # brew install sfml@2
+    set(SFML_DIR "/opt/homebrew/opt/sfml@2/lib/cmake/SFML")
+    include_directories(/opt/homebrew/opt/sfml@2/include)
+elseif(WIN32)
+    # https://www.sfml-dev.org/download/sfml/2.6.2/
+    # Adjust if wrong path
+    set(SFML_DIR "C:/SFML/lib/cmake/SFML")
+    include_directories("C:/SFML/include")
+endif()
+
+find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+target_link_libraries(rtosSuite PRIVATE sfml-graphics sfml-window sfml-system)
