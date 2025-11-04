@@ -36,6 +36,12 @@ struct Settings {
 };
 
 int main(int argc, char **argv) {
+    // test visuals
+    RoundRobinScheduler rr;
+    Renderer visuals(1200, 800);
+    std::vector<Job> allJobs = generateJobs(200);
+    simulate(rr, allJobs, 200, &visuals);
+
     Settings settings;
 
     if (argc == 1) {
@@ -78,22 +84,14 @@ int main(int argc, char **argv) {
     case CommandType::COMPARE:
     {
         std::cout << "Comparing schedulers...\n";
-        std::vector<Job> allJobs = generateJobs(settings.simulationTime);
 
         // use command arguments to decide which schedulers to use.
-
-        FCFSScheduler fcfs;
-        PriorityArrayScheduler pa;
-        RoundRobinScheduler rr(5);
-        simulate(rr, allJobs, settings.simulationTime);
-        simulate(fcfs, allJobs, settings.simulationTime);
-        simulate(pa, allJobs, settings.simulationTime);
         break;
     }
     default:
         break;
-    }
-
+    }   
+    std::cout << "Simulation complete.\n";
     return 0;   
 }
 
