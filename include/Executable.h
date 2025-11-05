@@ -31,7 +31,7 @@ struct Command {
 
 struct Settings {
     int simulationTime = 100000;
-    int timeStep = 1000;
+    int timeStep = 0;
     bool render = false;
 
     Command command = Command { NONE };

@@ -8,6 +8,9 @@
 
 #include "Executable.h"
 
+#include <unordered_map>
+#include <cstring>
+
 using namespace Executable;
 
 Scheduler* initSchedulerOf(SchedulerType type);
@@ -87,11 +90,12 @@ int main(int argc, char **argv) {
             simulate(*scheduler1, allJobs, settings.simulationTime, &renderer1);
             simulate(*scheduler2, allJobs, settings.simulationTime, &renderer2);
         } else {
-            simulate(*scheduler2, allJobs, settings.simulationTime);
             simulate(*scheduler1, allJobs, settings.simulationTime);
+            simulate(*scheduler2, allJobs, settings.simulationTime);
         }
 
         std::cout << "Simulation complete.\n";
+
         break;
     }
     case CommandType::LIST:
@@ -123,6 +127,7 @@ Scheduler* initSchedulerOf(SchedulerType type) {
     default:
     {
         error("Error: type of Scheduler is invalid.");
+        return nullptr;
     }
     }
 }

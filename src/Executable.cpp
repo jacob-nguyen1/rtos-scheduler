@@ -33,7 +33,7 @@ void Executable::helpPrompt() {
                  "Flags:\n"
                  "\t--render - signals that a window will be opened to visualize the completion and processing of jobs.\n"
                  "\t--simTime {value: int} - modifies the default simulation time to desired value. (default: 1000000)\n"
-                 "\t--timeStep {value: int} - modifies the default timestep to desired value. If 0, no time step prints. (default: 1000)\n";
+                 "\t--timeStep {value: int} - modifies the default timestep to desired value. If 0, no time step prints. (default: 0)\n";
 }
 
 void Executable::error(const char* message) {

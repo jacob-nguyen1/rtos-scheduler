@@ -1,6 +1,7 @@
 #include "Job.h"
 #include <random>
 #include <iostream>
+#include <algorithm>
 
 Job::Job(int id, std::string task, int priority, int executionTime, int arrivalTime, int deadlineWindow) :
     jobID(id),
