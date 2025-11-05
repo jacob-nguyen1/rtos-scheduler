@@ -68,7 +68,7 @@ std::vector<Job> generateJobs(int simTime) {
         rhoNominal += static_cast<double>(tpl.baseExec) / tpl.basePeriod;
 
     // ---- Step B: scale all periods so target ρ ≈ 0.80 ----
-    const double targetUtil = 1.5;
+    const double targetUtil = 0.78;
     if (rhoNominal > 0.0) {
         double scale = targetUtil / rhoNominal;   //smaller load ⇒ longer periods
         for (auto& tpl : templates)
