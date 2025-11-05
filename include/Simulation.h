@@ -4,6 +4,6 @@
 #include "Visualization.h"
 
 void simulate(Scheduler& scheduler,
-              std::vector<Job>& allJobs,
+              std::vector<Job> allJobs,
               int simTime,
               Renderer* renderer = nullptr);

@@ -1,8 +1,10 @@
 #include "Simulation.h"
 #include <iostream>
 
+#include "Executable.h"
+
 void simulate(Scheduler& scheduler,
-              std::vector<Job>& allJobs,
+              std::vector<Job> allJobs,
               int simTime,
               Renderer* renderer)
 {
@@ -38,7 +40,7 @@ void simulate(Scheduler& scheduler,
         }
         
 
-        if (t % 10 == 0) {
+        if (Executable::settings.timeStep != 0 && t % Executable::settings.timeStep == 0) {
             std::cout << "t=" << t << "ms: waiting=" << (allJobs.size() - nextJobIdx)
                       << " ready=" << scheduler.size()
                       << " running=" << (runningJob ? 1 : 0)

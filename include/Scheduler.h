@@ -10,3 +10,9 @@ public:
     virtual int size() = 0;
     virtual ~Scheduler() = default;
 };
+
+enum SchedulerType {
+    FirstComeFirstServe = 0,
+    PriorityArray = 1,
+    RoundRobin,
+};

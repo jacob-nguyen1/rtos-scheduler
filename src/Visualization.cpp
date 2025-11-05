@@ -8,7 +8,7 @@ Renderer::Renderer(int width, int height)
     window.create(sf::VideoMode(width, height), "RTOS Scheduler Visualization");
     window.setFramerateLimit(60);
 
-    if (!font.loadFromFile(Executable::path + "/assets/arial.ttf")) {
+    if (!font.loadFromFile(Executable::getPath() + "/assets/arial.ttf")) {
         std::cerr << "Warning: could not load font (assets/arial.ttf)\n";
     }
 
