@@ -65,27 +65,32 @@
                     jobStartTime = -1;
                 }
             }
-            for (auto& job : allJobs) {
-                if (job.state == JobState::COMPLETED && job.fadeTimer < 1.0f) {
-                    job.fadeTimer += 0.05f; // adjust speed: 0.05 = slower fade
-                }
-            }
 
             
             if (renderer && renderer->isOpen()) {
+                for (auto& job : allJobs) {
+                    if (job.state == JobState::COMPLETED && job.fadeTimer < 1.0f) {
+                        job.fadeTimer += 0.05f; // adjust speed: 0.05 = slower fade
+                    }
+                }
+
                 renderer->renderLive(allJobs, t);
                 sf::sleep(sf::milliseconds(600));
             }
         }
-        std::cout << "\n>>> " << scheduler.getName() << " <<<\n";
-        std::cout << "Completed: " << completedJobs.size() << " jobs\n";
-        std::cout << "Total missed deadlines: " << missedDeadlines << "\n";
 
-        if (missedDeadlines > 0) {
-            for (int i = 0; i < 8; i++) {
-                std::cout << "\tPriority " << i << ": " << missedDeadlinePriorities[i] << "\n";
+        if (!renderer) {
+            std::cout << "\n>>> " << scheduler.getName() << " <<<\n";
+            std::cout << "Completed: " << completedJobs.size() << " jobs\n";
+            std::cout << "Total missed deadlines: " << missedDeadlines << "\n";
+
+            if (missedDeadlines > 0) {
+                for (int i = 0; i < 8; i++) {
+                    std::cout << "\tPriority " << i << ": " << missedDeadlinePriorities[i] << "\n";
+                }
             }
+            std::cout << "\n";
         }
-        std::cout << "\n";
+        
     }
 

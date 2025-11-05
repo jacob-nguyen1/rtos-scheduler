@@ -94,8 +94,6 @@ int main(int argc, char **argv) {
             simulate(*scheduler2, allJobs, settings.simulationTime);
         }
 
-        std::cout << "Simulation complete.\n";
-
         break;
     }
     case CommandType::LIST:
