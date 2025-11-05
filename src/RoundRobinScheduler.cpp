@@ -36,3 +36,7 @@ bool RoundRobinScheduler::isEmpty() {
 int RoundRobinScheduler::size() {
     return this->readyQueue.size();
 }
+
+std::string RoundRobinScheduler::getName() {
+    return "Round Robin Scheduler";
+}

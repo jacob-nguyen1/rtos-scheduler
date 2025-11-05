@@ -22,3 +22,7 @@ bool FCFSScheduler::isEmpty() {
 int FCFSScheduler::size() {
     return readyJobs.size();
 }
+
+std::string FCFSScheduler::getName() {
+    return "FCFS Scheduler";
+}

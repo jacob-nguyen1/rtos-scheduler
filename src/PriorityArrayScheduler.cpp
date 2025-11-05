@@ -43,3 +43,7 @@ bool PriorityArrayScheduler::isEmpty() {
 int PriorityArrayScheduler::size() {
     return numJobs;
 }
+
+std::string PriorityArrayScheduler::getName() {
+    return "Priority Array Scheduler";
+}

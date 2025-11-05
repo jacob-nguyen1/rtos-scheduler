@@ -13,4 +13,5 @@ public:
     bool shouldPreempt(Job* running) override;
     bool isEmpty() override;
     int size() override;
+    std::string getName() override;
 };
