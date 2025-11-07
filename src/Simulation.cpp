@@ -2,6 +2,7 @@
 #include "Executable.h"
 
 #include <iostream>
+#include <chrono>
 
 void simulate(Scheduler& scheduler,
             std::vector<Job> allJobs,
@@ -18,6 +19,7 @@ void simulate(Scheduler& scheduler,
     Job* runningJob = nullptr;
     int jobStartTime = -1;
 
+    auto start = std::chrono::steady_clock::now();
     for (int t = 0; t <= simTime; t++) {
 
         // insert newly arrived jobs
@@ -84,6 +86,8 @@ void simulate(Scheduler& scheduler,
             sf::sleep(sf::milliseconds(1));
         }
     }
+    auto end = std::chrono::steady_clock::now();
+    auto elapsedWallClockTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     if (!renderer) {
         int totalTurnaround = 0, totalWaiting = 0;
         for (int i = 0; i < 8; i++) {
@@ -98,6 +102,8 @@ void simulate(Scheduler& scheduler,
         std::cout << "Total missed deadlines: " << missedDeadlines << "\n";
         std::cout << "Average turnaround time: " << (totalTurnaround / completedJobs.size()) << "ms\n";
         std::cout << "Average waiting time: " << (totalWaiting / completedJobs.size()) << "ms\n\n";
+
+        std::cout << "Elapsed wall clock time: " << elapsedWallClockTime.count() << "ms\n\n";
         
         std::cout << "Missed deadlines by priority:\n";
         for (int i = 0; i < 8; i++) {
@@ -110,7 +116,6 @@ void simulate(Scheduler& scheduler,
             } else {
                 std::cout << "\tPriority " << i << ": " << "N/A\n";
             }
-            
         }
         std::cout << "\nAverage waiting time by priority:\n";
         for (int i = 0; i < 8; i++) {
