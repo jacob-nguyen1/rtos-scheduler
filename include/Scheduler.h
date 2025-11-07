@@ -15,5 +15,6 @@ public:
 enum SchedulerType {
     FirstComeFirstServe = 0,
     PriorityArray = 1,
-    RoundRobin,
+    RoundRobin = 2,
+    BinaryHeap,
 };

@@ -5,6 +5,7 @@
 #include "PriorityArrayScheduler.h"
 #include "Job.h"
 #include "RoundRobinScheduler.h"
+#include "BinaryHeapScheduler.h"
 
 #include "Executable.h"
 
@@ -21,6 +22,7 @@ int main(int argc, char **argv) {
         {"fcfs", SchedulerType::FirstComeFirstServe},
         {"pa", SchedulerType::PriorityArray},
         {"rr", SchedulerType::RoundRobin},
+        {"bh", SchedulerType::BinaryHeap}
     };
 
     if (argc == 1) {
@@ -101,7 +103,8 @@ int main(int argc, char **argv) {
         std::cout << "List of Available Schedulers to compare:\n"
                      "\tfcfs - First Come First Serve (non-preemptive)\n"
                      "\tpa - Priority Array (preemptive)\n"
-                     "\trr - Round Robin (preemptive)\n";
+                     "\trr - Round Robin (preemptive)\n"
+                     "\tbh - Binary Heap (preemptive)\n";
         break;
     }
     }   
@@ -121,6 +124,10 @@ Scheduler* initSchedulerOf(SchedulerType type) {
     case SchedulerType::RoundRobin:
     {
         return new RoundRobinScheduler;
+    }
+    case SchedulerType::BinaryHeap:
+    {
+        return new BinaryHeapScheduler;
     }
     default:
     {

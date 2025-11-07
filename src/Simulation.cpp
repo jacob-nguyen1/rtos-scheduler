@@ -81,7 +81,7 @@ void simulate(Scheduler& scheduler,
                 }
             }
             renderer->renderLive(allJobs, t);
-            sf::sleep(sf::milliseconds(600));
+            sf::sleep(sf::milliseconds(1));
         }
     }
     if (!renderer) {
