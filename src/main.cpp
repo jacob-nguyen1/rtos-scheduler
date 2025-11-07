@@ -6,6 +6,7 @@
 #include "Job.h"
 #include "RoundRobinScheduler.h"
 #include "BinaryHeapScheduler.h"
+#include "SJFScheduler.h"
 
 #include "Executable.h"
 
@@ -22,7 +23,8 @@ int main(int argc, char **argv) {
         {"fcfs", SchedulerType::FirstComeFirstServe},
         {"pa", SchedulerType::PriorityArray},
         {"rr", SchedulerType::RoundRobin},
-        {"bh", SchedulerType::BinaryHeap}
+        {"bh", SchedulerType::BinaryHeap},
+        {"sjf", SchedulerType::ShortestJobFirst}
     };
 
     if (argc == 1) {
@@ -128,6 +130,10 @@ Scheduler* initSchedulerOf(SchedulerType type) {
     case SchedulerType::BinaryHeap:
     {
         return new BinaryHeapScheduler;
+    }
+    case SchedulerType::ShortestJobFirst:
+    {
+        return new SJFScheduler;
     }
     default:
     {

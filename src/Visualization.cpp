@@ -18,7 +18,7 @@ Renderer::Renderer(int width, int height)
         {"ThrottleControl", sf::Color(80, 180, 255)},
         {"TransmissionCtrl", sf::Color(200, 120, 255)},
         {"DashboardUpdate", sf::Color(255, 255, 120)},
-        {"Diagnostics", sf::Color(160, 160, 160)},
+        {"Diagnostics", sf::Color(255, 205, 155)},
         {"DataLogging", sf::Color(180, 255, 255)}
     };
 }
@@ -139,7 +139,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
                 rect.setFillColor(getColorForTask(job->task));
             }
 
-            if (job->state == JobState::RUNNING) {
+            if (job->state == JobState::RUNNING || job->state == JobState::READY) {
                 rect.setOutlineThickness(3.0f);
                 rect.setOutlineColor(sf::Color::White);
             }
@@ -162,7 +162,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
                 sf::RectangleShape border(sf::Vector2f(boxWidth, boxHeight));
                 border.setPosition(x, y);
                 border.setFillColor(sf::Color::Transparent);
-                border.setOutlineThickness(3.f);
+                border.setOutlineThickness(3.0f);
                 border.setOutlineColor(sf::Color(255, 50, 50));
                 window.draw(border);
             }
@@ -172,12 +172,18 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
             text.setCharacterSize(14);
             text.setString(job->task);
             text.setFillColor(sf::Color::Black);
-            text.setPosition(x + 5, y + 8);
+
+            sf::FloatRect textBounds = text.getLocalBounds();
+
+            text.setOrigin(textBounds.left + textBounds.width / 2.0f,
+                           textBounds.top + textBounds.height / 2.0f);
+
+            text.setPosition(x + boxWidth / 2.0f, y + boxHeight / 2.0f - 2.0f);
             window.draw(text);
 
             // draw progress bar
-            if (job->state == JobState::RUNNING) {
-                rect.setOutlineThickness(3.f);
+            if (job->state == JobState::RUNNING || job->state == JobState::READY) {
+                rect.setOutlineThickness(3.0f);
                 rect.setOutlineColor(sf::Color::White);
 
                 float pct = job->progress();
@@ -198,7 +204,12 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
                 progressBar.setPosition(x + 3, y + boxHeight - 12);
                 progressBar.setFillColor(progressColor);
                 window.draw(progressBar);
+            }
 
+            // draw % text
+            if (job->state == JobState::RUNNING) {
+                float pct = job->progress();
+                pct = std::max(0.f, std::min(1.f, pct));
 
                 sf::Text pctText;
                 pctText.setFont(font);
@@ -232,8 +243,23 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
         idleText.setString("IDLE");
         
         sf::FloatRect bounds = idleText.getLocalBounds();
-        float x = (screenWidth - bounds.width) / 2.f;
-        float y = sectionHeight + (sectionHeight - bounds.height) / 2.f - 10.f; 
+        float x = (screenWidth - bounds.width) / 2.0f;
+        float y = sectionHeight + (sectionHeight - bounds.height) / 2.0f - 10.f; 
+        idleText.setPosition(x, y);
+
+        window.draw(idleText);
+    }
+
+    if (readyJobs.empty()) {
+        sf::Text idleText;
+        idleText.setFont(font);
+        idleText.setCharacterSize(22);
+        idleText.setFillColor(sf::Color(180, 180, 180));
+        idleText.setString("WAITING");
+        
+        sf::FloatRect bounds = idleText.getLocalBounds();
+        float x = (screenWidth - bounds.width) / 2.0f;
+        float y = sectionHeight - (sectionHeight - bounds.height) / 2.0f - 10.0f; 
         idleText.setPosition(x, y);
 
         window.draw(idleText);

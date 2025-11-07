@@ -17,4 +17,5 @@ enum SchedulerType {
     PriorityArray = 1,
     RoundRobin = 2,
     BinaryHeap,
+    ShortestJobFirst
 };

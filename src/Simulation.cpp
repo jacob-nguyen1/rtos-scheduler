@@ -83,7 +83,7 @@ void simulate(Scheduler& scheduler,
                 }
             }
             renderer->renderLive(allJobs, t);
-            sf::sleep(sf::milliseconds(1));
+            sf::sleep(sf::milliseconds(600));
         }
     }
     auto end = std::chrono::steady_clock::now();
