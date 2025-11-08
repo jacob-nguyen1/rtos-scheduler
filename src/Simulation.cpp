@@ -4,9 +4,10 @@
 #include <iostream>
 
 void simulate(Scheduler& scheduler,
-            std::vector<Job> allJobs,
+            std::vector<Job>& allJobs,
             int simTime,
-            Renderer* renderer)
+            bool sleep,
+            int* time)
 {
     int nextJobIdx = 0;
     std::vector<Job> completedJobs;
@@ -18,7 +19,9 @@ void simulate(Scheduler& scheduler,
     Job* runningJob = nullptr;
     int jobStartTime = -1;
 
+
     for (int t = 0; t <= simTime; t++) {
+        if (time) (*time) = t;
 
         // insert newly arrived jobs
         while (nextJobIdx < allJobs.size() && allJobs[nextJobIdx].arrivalTime == t) {
@@ -73,18 +76,10 @@ void simulate(Scheduler& scheduler,
                 jobStartTime = -1;
             }
         }
-        
-        if (renderer && renderer->isOpen()) {
-            for (auto& job : allJobs) {
-                if (job.state == JobState::COMPLETED && job.fadeTimer < 1.0f) {
-                    job.fadeTimer += 0.05f; // adjust speed: 0.05 = slower fade
-                }
-            }
-            renderer->renderLive(allJobs, t);
-            sf::sleep(sf::milliseconds(600));
-        }
+    
+            sf::sleep(sf::milliseconds(60));
     }
-    if (!renderer) {
+    if (!sleep) {
         int totalTurnaround = 0, totalWaiting = 0;
         for (int i = 0; i < 8; i++) {
             totalTurnaround += turnaroundByPriority[i];

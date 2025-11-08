@@ -1,5 +1,8 @@
 #include "Visualization.h"
 #include <iostream>
+#include "Executable.h"
+
+#define ASSET_PATH
 
 Renderer::Renderer(int width, int height)
     : screenWidth(width), screenHeight(height), sectionHeight(height / 3.0f)
@@ -7,7 +10,7 @@ Renderer::Renderer(int width, int height)
     window.create(sf::VideoMode(width, height), "RTOS Scheduler Visualization");
     window.setFramerateLimit(60);
 
-    if (!font.loadFromFile(std::string(ASSET_PATH) + "/arial.ttf")) {
+    if (!font.loadFromFile(Executable::getPath() + "/assets/arial.ttf")) {
         std::cerr << "Warning: could not load font (assets/Arial.ttf)\n";
     }
 
@@ -257,11 +260,18 @@ bool Renderer::isOpen() {
     return window.isOpen();
 }
 
-void Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
+void Renderer::close() {
+    window.close();
+}
+
+bool Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
-            window.close();
+            {
+                close();
+                return false;
+            }
     }
 
     window.clear(sf::Color(25, 25, 25));
@@ -270,4 +280,6 @@ void Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
     drawClock(currTime);
 
     window.display();
+
+    return true;
 }

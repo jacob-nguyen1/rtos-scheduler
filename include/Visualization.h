@@ -19,6 +19,7 @@ class Renderer {
 public:
     Renderer(int width = 1200, int height = 800);
 
-    void renderLive(const std::vector<Job>& jobs, int currTime);
+    bool renderLive(const std::vector<Job>& jobs, int currTime);
+    void close();
     bool isOpen();
 };
