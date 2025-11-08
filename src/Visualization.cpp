@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Executable.h"
 
-#define ASSET_PATH
+//#define ASSET_PATH
 
 Renderer::Renderer(Scheduler& scheduler, int width, int height)
     : screenWidth(width), screenHeight(height), sectionHeight(height / 3.0f)

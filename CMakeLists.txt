@@ -12,9 +12,9 @@ file(GLOB SOURCES "src/*.cpp")
 add_executable(rtosSuite ${SOURCES})
 
 # Embed absolute asset path
-#target_compile_definitions(rtosSuite PRIVATE
-#    ASSET_PATH="${CMAKE_SOURCE_DIR}/assets"
-#)
+target_compile_definitions(rtosSuite PRIVATE
+    ASSET_PATH="${CMAKE_SOURCE_DIR}/assets"
+)
 
 set_target_properties(rtosSuite PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY bin

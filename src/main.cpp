@@ -114,7 +114,6 @@ int main(int argc, char **argv) {
                 simulate(*scheduler2, allJobs2, Executable::settings.simulationTime, true, &time2);
                 done2 = true;
             });
-            // simulate(*scheduler2, allJobs, settings.simulationTime, &renderer2);
 
             while (!done1 || !done2) {
                 for (auto& job : allJobs2) {
