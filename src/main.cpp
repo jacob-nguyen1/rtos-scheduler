@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <cstring>
 #include <thread>
+#include <mutex>
+#include <atomic>
 
 using namespace Executable;
 
