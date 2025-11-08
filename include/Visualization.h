@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include "Job.h"
+#include "Scheduler.h"
 
 class Renderer {
     sf::RenderWindow window;
@@ -17,7 +18,7 @@ class Renderer {
     void drawClock(int currentTimeMs);
     
 public:
-    Renderer(int width = 1200, int height = 800);
+    Renderer(Scheduler& scheduler, int width = 1200, int height = 800);
 
     void renderLive(const std::vector<Job>& jobs, int currTime);
     bool isOpen();

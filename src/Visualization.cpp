@@ -1,10 +1,10 @@
 #include "Visualization.h"
 #include <iostream>
 
-Renderer::Renderer(int width, int height)
+Renderer::Renderer(Scheduler& scheduler, int width, int height)
     : screenWidth(width), screenHeight(height), sectionHeight(height / 3.0f)
 {
-    window.create(sf::VideoMode(width, height), "RTOS Scheduler Visualization");
+    window.create(sf::VideoMode(width, height), scheduler.getName());
     window.setFramerateLimit(60);
 
     if (!font.loadFromFile(std::string(ASSET_PATH) + "/Arial.ttf")) {

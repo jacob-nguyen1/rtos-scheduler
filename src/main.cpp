@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
         std::vector<Job> allJobs = generateJobs(settings.simulationTime);
 
         if (settings.render) { // add multithreading so both renderers render at same time
-            Renderer renderer1;
-            Renderer renderer2;
+            Renderer renderer1(*scheduler1);
+            Renderer renderer2(*scheduler2);
 
             simulate(*scheduler1, allJobs, settings.simulationTime, &renderer1);
             simulate(*scheduler2, allJobs, settings.simulationTime, &renderer2);
