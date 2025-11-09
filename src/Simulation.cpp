@@ -81,46 +81,44 @@ void simulate(Scheduler& scheduler,
     
         if (sleep) sf::sleep(sf::milliseconds(600)); //MUST MATCH SLEEP IN MAIN FOR VISUALS (line 141)
     }
+
     auto end = std::chrono::steady_clock::now();
     auto elapsedWallClockTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    if (!sleep) {
-        int totalTurnaround = 0, totalWaiting = 0;
-        for (int i = 0; i < 8; i++) {
-            totalTurnaround += turnaroundByPriority[i];
-            totalWaiting += waitingByPriority[i];
-        }
-        
-        std::cout << "===============================================\n";
-        std::cout << "\n>>> " << scheduler.getName() << " <<<\n";
-        std::cout << "Completed: " << completedJobs.size() << " jobs\n\n";
-        
-        std::cout << "Total missed deadlines: " << missedDeadlines << "\n";
-        std::cout << "Average turnaround time: " << (totalTurnaround / completedJobs.size()) << "ms\n";
-        std::cout << "Average waiting time: " << (totalWaiting / completedJobs.size()) << "ms\n\n";
-
-        std::cout << "Elapsed wall clock time: " << elapsedWallClockTime.count() << "ms\n\n";
-        
-        std::cout << "Missed deadlines by priority:\n";
-        for (int i = 0; i < 8; i++) {
-            std::cout << "\tPriority " << i << ": " << missedDeadlinePriorities[i] << "\n";
-        }
-        std::cout << "\nAverage turnaround time by priority:\n";
-        for (int i = 0; i < 8; i++) {
-            if (countByPriority[i] > 0) {
-                std::cout << "\tPriority " << i << ": " << (turnaroundByPriority[i] / countByPriority[i]) << "ms\n";
-            } else {
-                std::cout << "\tPriority " << i << ": " << "N/A\n";
-            }
-        }
-        std::cout << "\nAverage waiting time by priority:\n";
-        for (int i = 0; i < 8; i++) {
-            if (countByPriority[i] > 0) {
-                std::cout << "\tPriority " << i << ": " << (waitingByPriority[i] / countByPriority[i]) << "ms\n";
-            } else {
-                std::cout << "\tPriority " << i << ": " << "N/A\n";
-            }
-        }
-        std::cout << "\n";
+    int totalTurnaround = 0, totalWaiting = 0;
+    for (int i = 0; i < 8; i++) {
+        totalTurnaround += turnaroundByPriority[i];
+        totalWaiting += waitingByPriority[i];
     }
     
+    std::cout << "===============================================\n";
+    std::cout << "\n>>> " << scheduler.getName() << " <<<\n";
+    std::cout << "Completed: " << completedJobs.size() << " jobs\n\n";
+    
+    std::cout << "Total missed deadlines: " << missedDeadlines << "\n";
+    std::cout << "Average turnaround time: " << (totalTurnaround / completedJobs.size()) << "ms\n";
+    std::cout << "Average waiting time: " << (totalWaiting / completedJobs.size()) << "ms\n\n";
+
+    std::cout << "Elapsed wall clock time: " << elapsedWallClockTime.count() << "ms\n\n";
+    
+    std::cout << "Missed deadlines by priority:\n";
+    for (int i = 0; i < 8; i++) {
+        std::cout << "\tPriority " << i << ": " << missedDeadlinePriorities[i] << "\n";
+    }
+    std::cout << "\nAverage turnaround time by priority:\n";
+    for (int i = 0; i < 8; i++) {
+        if (countByPriority[i] > 0) {
+            std::cout << "\tPriority " << i << ": " << (turnaroundByPriority[i] / countByPriority[i]) << "ms\n";
+        } else {
+            std::cout << "\tPriority " << i << ": " << "N/A\n";
+        }
+    }
+    std::cout << "\nAverage waiting time by priority:\n";
+    for (int i = 0; i < 8; i++) {
+        if (countByPriority[i] > 0) {
+            std::cout << "\tPriority " << i << ": " << (waitingByPriority[i] / countByPriority[i]) << "ms\n";
+        } else {
+            std::cout << "\tPriority " << i << ": " << "N/A\n";
+        }
+    }
+    std::cout << "\n";
 }

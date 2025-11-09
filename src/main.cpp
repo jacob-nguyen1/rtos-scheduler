@@ -133,16 +133,17 @@ int main(int argc, char **argv) {
                     }
                 }
 
-                if (!(renderer1.renderLive(allJobs, time1) && renderer2.renderLive(allJobs2, time2))) {
+                if ((!renderer1.renderLive(allJobs, time1) || !renderer2.renderLive(allJobs2, time2))) {
                     if (renderer2.isOpen()) renderer2.close();
                     if (renderer1.isOpen()) renderer1.close();
+                    break;
                 }
 
                 sf::sleep(sf::milliseconds(600));
             }
 
-            t1.join();
-            t2.join();
+            done1 ? t1.join() : t1.detach();
+            done2 ? t2.join() : t2.detach();
         } else {
             simulate(*scheduler1, allJobs, settings.simulationTime);
             simulate(*scheduler2, allJobs2, settings.simulationTime);
