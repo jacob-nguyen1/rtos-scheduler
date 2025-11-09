@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Scheduler.h"
+
 #include <string>
 #include <iostream>
-#include "Scheduler.h"
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h> // For _NSGetExecutablePath on macOS

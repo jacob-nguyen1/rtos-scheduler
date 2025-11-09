@@ -1,5 +1,8 @@
 #include "Visualization.h"
 #include <iostream>
+#include "Executable.h"
+
+//#define ASSET_PATH
 
 Renderer::Renderer(Scheduler& scheduler, int width, int height)
     : screenWidth(width), screenHeight(height), sectionHeight(height / 3.0f)
@@ -283,11 +286,18 @@ bool Renderer::isOpen() {
     return window.isOpen();
 }
 
-void Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
+void Renderer::close() {
+    window.close();
+}
+
+bool Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
-            window.close();
+            {
+                close();
+                return false;
+            }
     }
 
     window.clear(sf::Color(25, 25, 25));
@@ -296,4 +306,6 @@ void Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
     drawClock(currTime);
 
     window.display();
+
+    return true;
 }

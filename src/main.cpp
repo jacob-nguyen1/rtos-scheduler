@@ -12,6 +12,9 @@
 
 #include <unordered_map>
 #include <cstring>
+#include <thread>
+#include <mutex>
+#include <atomic>
 
 using namespace Executable;
 
@@ -86,16 +89,57 @@ int main(int argc, char **argv) {
         Scheduler* scheduler2 = initSchedulerOf(settings.command.args.compare.y);
 
         std::vector<Job> allJobs = generateJobs(settings.simulationTime);
+        std::vector<Job> allJobs2 = allJobs;
 
         if (settings.render) { // add multithreading so both renderers render at same time
             Renderer renderer1(*scheduler1);
             Renderer renderer2(*scheduler2);
 
-            simulate(*scheduler1, allJobs, settings.simulationTime, &renderer1);
-            simulate(*scheduler2, allJobs, settings.simulationTime, &renderer2);
+            std::mutex simMutex;
+            std::mutex simMutex2;
+
+            int time1(0);
+            int time2(0);
+
+            std::atomic<bool> done1(false);
+            std::atomic<bool> done2(false);
+
+            std::thread t1([&] {
+                std::lock_guard<std::mutex> lock(simMutex);
+                simulate(*scheduler1, allJobs, Executable::settings.simulationTime, true, &time1);
+                done1 = true;
+            });
+            std::thread t2([&] {
+                std::lock_guard<std::mutex> lock(simMutex2);
+                simulate(*scheduler2, allJobs2, Executable::settings.simulationTime, true, &time2);
+                done2 = true;
+            });
+
+            while (!done1 || !done2) {
+                for (auto& job : allJobs2) {
+                    if (job.state == JobState::COMPLETED && job.fadeTimer < 1.0f) {
+                        job.fadeTimer += 0.05f; // adjust speed: 0.05 = slower fade
+                    }
+                }
+                for (auto& job : allJobs) {
+                    if (job.state == JobState::COMPLETED && job.fadeTimer < 1.0f) {
+                        job.fadeTimer += 0.05f; // adjust speed: 0.05 = slower fade
+                    }
+                }
+
+                if (!(renderer1.renderLive(allJobs, time1) && renderer2.renderLive(allJobs2, time2))) {
+                    if (renderer2.isOpen()) renderer2.close();
+                    if (renderer1.isOpen()) renderer1.close();
+                }
+
+                sf::sleep(sf::milliseconds(30));
+            }
+
+            t1.join();
+            t2.join();
         } else {
             simulate(*scheduler1, allJobs, settings.simulationTime);
-            simulate(*scheduler2, allJobs, settings.simulationTime);
+            simulate(*scheduler2, allJobs2, settings.simulationTime);
         }
 
         break;
