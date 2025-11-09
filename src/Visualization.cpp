@@ -5,7 +5,7 @@
 //#define ASSET_PATH
 
 Renderer::Renderer(Scheduler& scheduler, int width, int height)
-    : screenWidth(width), screenHeight(height), sectionHeight(height / 3.0f)
+    : windowWidth(width), windowHeight(height), sectionHeight(height / 3.0f)
 {
     window.create(sf::VideoMode(width, height), scheduler.getName());
     window.setFramerateLimit(60);
@@ -34,12 +34,12 @@ sf::Color Renderer::getColorForTask(const std::string& name) {
 
 void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
 
-    const float boxWidth = this->screenWidth / 8;
-    const float boxHeight = this->screenHeight / 20;
-    const float margin = screenWidth / 80;
+    const float boxWidth = this->windowWidth / 8;
+    const float boxHeight = this->windowHeight / 20;
+    const float margin = windowWidth / 80;
 
-    const int maxRows = 4;
-    const int maxCols = 6;
+    const int maxRows = (sectionHeight - 50) / boxHeight;
+    const int maxCols = (windowWidth - 50) / boxWidth;
     const int maxVisibleJobs = maxCols * maxRows;
 
     sf::Text label;
@@ -63,7 +63,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
     label.setPosition(20, completedY);
     window.draw(label);
 
-    sf::RectangleShape line(sf::Vector2f(screenWidth, 2.0f));
+    sf::RectangleShape line(sf::Vector2f(windowWidth, 2.0f));
     line.setFillColor(sf::Color(80, 80, 80));
     line.setPosition(0, sectionHeight);
     window.draw(line);
@@ -102,7 +102,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
                         float baseY,
                         bool isCompleted = false,
                         bool centerVertically = false) {
-        const float startX = 100.0f;
+        const float startX = windowWidth / 30.0f;
         float startY = baseY + 25.0f;
 
         int visibleCount = std::min<int>(list.size(), maxVisibleJobs);
@@ -124,7 +124,8 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
             float y = startY + row * (boxHeight + margin);
 
             sf::RectangleShape rect(sf::Vector2f(boxWidth, boxHeight));
-            rect.setPosition(x, y);
+            if (job->state == JobState::RUNNING) rect.setPosition({windowWidth / 2.0f - (boxWidth / 2), windowHeight / 2.0f - (boxHeight / 2)});
+            else rect.setPosition(x, y);
 
             if (isCompleted) {
                 // fade effect for new completions (GPT-5)
@@ -163,7 +164,8 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
             // outline missed deadline
             if (missed) {
                 sf::RectangleShape border(sf::Vector2f(boxWidth, boxHeight));
-                border.setPosition(x, y);
+                if (job->state == JobState::RUNNING) border.setPosition({windowWidth / 2.0f - (boxWidth / 2), windowHeight / 2.0f - (boxHeight / 2)});
+                else border.setPosition(x, y);
                 border.setFillColor(sf::Color::Transparent);
                 border.setOutlineThickness(3.0f);
                 border.setOutlineColor(sf::Color(255, 50, 50));
@@ -172,7 +174,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
 
             sf::Text text;
             text.setFont(font);
-            text.setCharacterSize(14);
+            text.setCharacterSize(13);
             text.setString(job->task);
             text.setFillColor(sf::Color::Black);
 
@@ -181,7 +183,8 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
             text.setOrigin(textBounds.left + textBounds.width / 2.0f,
                            textBounds.top + textBounds.height / 2.0f);
 
-            text.setPosition(x + boxWidth / 2.0f, y + boxHeight / 2.0f - 2.0f);
+            if (job->state == JobState::RUNNING) text.setPosition(windowWidth / 2.0f, windowHeight / 2.0f);             
+            else text.setPosition(x + boxWidth / 2.0f, y + boxHeight / 2.0f);
             window.draw(text);
 
             // draw progress bar
@@ -204,7 +207,8 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
 
                 sf::RectangleShape progressBar;
                 progressBar.setSize(sf::Vector2f((boxWidth - 6) * pct, 8));
-                progressBar.setPosition(x + 3, y + boxHeight - 12);
+                if (job->state == JobState::RUNNING) progressBar.setPosition(windowWidth / 2.0f - (boxWidth / 2), windowHeight / 2.0f - (boxHeight / 2) + (boxHeight - progressBar.getSize().y));
+                else progressBar.setPosition(x, y + (boxHeight - progressBar.getSize().y));
                 progressBar.setFillColor(progressColor);
                 window.draw(progressBar);
             }
@@ -219,7 +223,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
                 pctText.setCharacterSize(12);
                 pctText.setFillColor(sf::Color::White);
                 pctText.setString(std::to_string(static_cast<int>(pct * 100)) + "%");
-                pctText.setPosition(x + boxWidth / 2.f - 15.f, y + boxHeight + 4.f);
+                pctText.setPosition({windowWidth / 2.0f - (pctText.getLocalBounds().getSize().x / 2), windowHeight / 2.0f - (boxHeight / 2) + boxHeight + 5});
                 window.draw(pctText);
             }
 
@@ -246,9 +250,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
         idleText.setString("IDLE");
         
         sf::FloatRect bounds = idleText.getLocalBounds();
-        float x = (screenWidth - bounds.width) / 2.0f;
-        float y = sectionHeight + (sectionHeight - bounds.height) / 2.0f - 10.f; 
-        idleText.setPosition(x, y);
+        idleText.setPosition((windowWidth - bounds.width) / 2.0f, sectionHeight + (sectionHeight - bounds.height) / 2.0f - 10.f);
 
         window.draw(idleText);
     }
@@ -261,7 +263,7 @@ void Renderer::drawLiveJobs(const std::vector<Job>& jobs, int currTime) {
         idleText.setString("WAITING");
         
         sf::FloatRect bounds = idleText.getLocalBounds();
-        float x = (screenWidth - bounds.width) / 2.0f;
+        float x = (windowWidth - bounds.width) / 2.0f;
         float y = sectionHeight - (sectionHeight - bounds.height) / 2.0f - 10.0f; 
         idleText.setPosition(x, y);
 
@@ -277,8 +279,8 @@ void Renderer::drawClock(int currentTimeMs) {
     clock.setFont(font);
     clock.setCharacterSize(24);
     clock.setFillColor(sf::Color::White);
-    clock.setString("Time: " + std::to_string(currentTimeMs) + " ms");
-    clock.setPosition(screenWidth / 2 - 80, screenHeight - 40);
+    clock.setString("Time: " + std::to_string(currentTimeMs) + "ms");
+    clock.setPosition({float(windowWidth * (8.0 / 10.0)), 10});
     window.draw(clock);
 }
 
@@ -308,4 +310,9 @@ bool Renderer::renderLive(const std::vector<Job>& jobs, int currTime) {
     window.display();
 
     return true;
+}
+
+void Renderer::setWindowPos(std::string side) {
+    if (side == "left") this->window.setPosition({0,0});
+    else if (side == "right") this->window.setPosition({windowWidth, 0});
 }

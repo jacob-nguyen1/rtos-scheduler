@@ -79,7 +79,7 @@ void simulate(Scheduler& scheduler,
             }
         }
     
-        if (sleep) sf::sleep(sf::milliseconds(60));
+        if (sleep) sf::sleep(sf::milliseconds(600)); //MUST MATCH SLEEP IN MAIN FOR VISUALS (line 141)
     }
     auto end = std::chrono::steady_clock::now();
     auto elapsedWallClockTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

@@ -7,8 +7,8 @@
 class Renderer {
     sf::RenderWindow window;
     sf::Font font;
-    int screenWidth;
-    int screenHeight;
+    int windowWidth;
+    int windowHeight;
     float sectionHeight;
 
     std::map<std::string, sf::Color> colorMap;
@@ -23,4 +23,5 @@ public:
     bool renderLive(const std::vector<Job>& jobs, int currTime);
     void close();
     bool isOpen();
+    void setWindowPos(std::string side);
 };

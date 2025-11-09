@@ -92,8 +92,14 @@ int main(int argc, char **argv) {
         std::vector<Job> allJobs2 = allJobs;
 
         if (settings.render) { // add multithreading so both renderers render at same time
-            Renderer renderer1(*scheduler1);
-            Renderer renderer2(*scheduler2);
+            sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+            int width = desktop.width / 2;
+            int height = desktop.height - 150;
+
+            Renderer renderer1(*scheduler1, width, height);
+            Renderer renderer2(*scheduler2, width, height);
+            renderer1.setWindowPos("left");
+            renderer2.setWindowPos("right");
 
             std::mutex simMutex;
             std::mutex simMutex2;
@@ -132,7 +138,7 @@ int main(int argc, char **argv) {
                     if (renderer1.isOpen()) renderer1.close();
                 }
 
-                sf::sleep(sf::milliseconds(30));
+                sf::sleep(sf::milliseconds(600));
             }
 
             t1.join();
